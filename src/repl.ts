@@ -4,4 +4,6 @@ import { db } from "./db";
 
 globalThis.db = db;
 
-repl.start("> ");
+repl.start("> ").on("close", () => {
+  db.persistence.stopAutocompaction();
+});

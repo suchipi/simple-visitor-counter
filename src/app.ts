@@ -8,15 +8,18 @@ export const app = express();
 app.use(nocache());
 app.use(cors());
 
-app.use((req, res, next) => {
-  res.contentType("text/javascript");
-});
-
 app.get("/counter/:name", (req, res, next) => {
   const name = req.params.name;
   db.findOne({ name }, (err, doc) => {
     if (err) {
       next(err);
+      return;
+    }
+    if (doc == null) {
+      res
+        .status(404)
+        .contentType("text/javascript")
+        .send(`throw new Error('No such counter:', ${JSON.stringify(name)});`);
       return;
     }
     const count = doc.count;
@@ -30,20 +33,24 @@ app.get("/counter/:name", (req, res, next) => {
       }
     });
 
-    res.status(200).send(
-      `if (document.currentScript) document.currentScript.replaceWith(document.createTextNode(${JSON.stringify(
-        // count + 1 cause it's about to get incremented
-        String(count + 1)
-      )}));`
-    );
+    res
+      .status(200)
+      .contentType("text/javascript")
+      .send(
+        `if (document.currentScript) document.currentScript.replaceWith(document.createTextNode(${JSON.stringify(
+          // count + 1 cause it's about to get incremented
+          String(count + 1)
+        )}));`
+      );
   });
 });
 
 // Fallback
 app.use((req, res, next) => {
-  res.status(404).send("throw new Error('404 not found');");
-  res.end();
-  next();
+  res
+    .status(404)
+    .contentType("text/javascript")
+    .send("throw new Error('404 not found');");
 });
 
 // Error handler
@@ -55,7 +62,9 @@ app.use(
     next: express.NextFunction
   ) => {
     console.error(err);
-    res.status(500).send("throw new Error('500 internal server error');");
-    next();
+    res
+      .status(500)
+      .contentType("text/javascript")
+      .send("throw new Error('500 internal server error');");
   }
 );

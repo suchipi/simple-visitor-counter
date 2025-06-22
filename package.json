@@ -1,0 +1,26 @@
+{
+  "name": "simple-visitor-counter",
+  "version": "0.0.0",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "build": "rm -rf dist && mkdir -p dist && tsc",
+    "start": "npm run build && node dist/index.js",
+    "repl": "npm run build && node dist/repl.js"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3",
+    "@types/nedb": "^1.8.16",
+    "@types/node": "^24.0.3",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "nedb": "^1.8.0",
+    "nocache": "^4.0.0"
+  }
+}
